@@ -80,11 +80,11 @@ class LinkedList {
                 current_node = current_node->next;
             }
 
-            if (current_node != NULL && current_node->data != value) {
-                current_node = NULL;
-                return 0; // NOT FOUND
+            if (current_node != NULL && current_node->data == value) {
+                return 1; // FOUND
             }
-            return 1; // FOUND VALUE
+            current_node = NULL;
+            return 0; // NOT FOUND
         }
 
         void insert_node(int value) {
