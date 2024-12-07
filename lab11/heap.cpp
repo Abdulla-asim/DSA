@@ -33,12 +33,14 @@ class MinHeap {
         int l = left_child(i);
         int r = right_child(i);
         int smallest = i;
-        if (l < heap.size() && heap[l] < heap[i]) {
-            smallest = l;
+
+        if (l < heap.size()) {
+            if (heap[l] < heap[i]) 
+                smallest = l;
+            if (heap[r] < heap[smallest]) 
+                smallest = r;
         }
-        if (r < heap.size() && heap[r] < heap[smallest]) {
-            smallest = r;
-        }
+        
         if (smallest != i) {
             swap(heap[i], heap[smallest]);
             build_heap(smallest);
@@ -75,11 +77,11 @@ class MinHeap {
     }
 
     bool is_empty() {
-        return heap.size() == 0;
+        return heap.size() <= 1;
     }
 
     int size() {
-        return heap.size();
+        return heap.size() - 1;
     }
 
     int height() {
