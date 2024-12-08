@@ -7,6 +7,9 @@
 
 using namespace std;
 
+unordered_map<char, int> frequency_table;
+unordered_map<char, string> huffman_codes;
+
 // Huffman Node structure
 struct HuffmanNode {
     char character;
@@ -128,10 +131,9 @@ string encode_string(const string& input, const unordered_map<char, string>& huf
 }
 
 // Generated huffman codes for the input string
-unordered_map<char, string> task_1(string input) {
+HuffmanNode* task_1(string input) {
 
     // Step 2: Frequency table
-    unordered_map<char, int> frequency_table;
     for (char c : input) {
         frequency_table[c]++;
     }
@@ -161,7 +163,6 @@ unordered_map<char, string> task_1(string input) {
     HuffmanNode* root = min_heap.top().second;
 
     // Step 4: Generate Huffman Codes
-    unordered_map<char, string> huffman_codes;
     generate_codes(root, "", huffman_codes);
 
     // Output the table
@@ -171,52 +172,13 @@ unordered_map<char, string> task_1(string input) {
         cout << "    " << pair.first << "        " << pair.second << "          " << huffman_codes[pair.first] << "\n";
     }
 
-    return huffman_codes;
+    return root;
 }
 
 // Encodes and then decodes the input string
 void task_2(string input) {
 
-    // Step 2: Frequency table
-    unordered_map<char, int> frequency_table;
-    for (char c : input) {
-        frequency_table[c]++;
-    }
-
-    // Step 3: Use custom MinHeap to build Huffman Tree
-    MinHeap min_heap;
-    for (const auto& pair : frequency_table) {
-        HuffmanNode* node = new HuffmanNode(pair.first, pair.second);
-        min_heap.push({pair.second, node});
-    }
-
-    // Build Huffman Tree
-    while (min_heap.size() > 1) {
-        auto left = min_heap.top();
-        min_heap.pop();
-        auto right = min_heap.top();
-        min_heap.pop();
-
-        HuffmanNode* merged = new HuffmanNode('\0', left.first + right.first);
-        merged->left = left.second;
-        merged->right = right.second;
-
-        min_heap.push({merged->frequency, merged});
-    }
-
-    // Root of the Huffman Tree
-    HuffmanNode* root = min_heap.top().second;
-
-    // Step 4: Generate Huffman Codes
-    unordered_map<char, string> huffman_codes;
-    generate_codes(root, "", huffman_codes);
-
-    // Output the table
-    cout << "\nCharacter | Frequency | Huffman Code\n";
-    cout << "---------------------------------\n";
-    for (const auto& pair : frequency_table) {
-        cout << "    " << pair.first << "        " << pair.second << "          " << huffman_codes[pair.first] << "\n";
-    }
+    HuffmanNode *root = task_1(input);
 
     // Encode the input string
     string encoded_string = encode_string(input, huffman_codes);
@@ -230,12 +192,35 @@ void task_2(string input) {
 
 }
 
+void task_3(string input) {
+
+    // Generate huffman codes
+    task_1(input);
+
+    // Calculate original and compressed sizes
+    int original_size_bits = input.size() * 8; // ASCII encoding (8 bits per char)
+    int compressed_size_bits = 0;
+
+    for (const auto& pair : frequency_table) {
+        compressed_size_bits += frequency_table[pair.first] * huffman_codes[pair.first].length();
+    }
+
+    double compression_ratio = (double)original_size_bits / compressed_size_bits;
+
+    // Print results
+    cout << "\nOriginal Size (bits): " << original_size_bits;
+    cout << "\nCompressed Size (bits): " << compressed_size_bits;
+    cout << "\nCompression Ratio: " << compression_ratio << "\n";
+
+}
+
 int main() {
 
     cout << "LAB 11 TASKS:\n";
     cout << "~~~~~~~~~~~~~\n";
     cout << "Task 1: Huffman Tree Constructino\n";
     cout << "Task 2: Huffman Encoding and Decoding\n";
+    cout << "Task 3: Compression Analysis\n";
     cout << "Enter the task number: ";
     int task;
     cin >> task;
@@ -248,6 +233,32 @@ int main() {
 
     if (task == 1) task_1(input);
     else if (task == 2) task_2(input);
+    else if (task == 3) {
+        cout << "Task 3: Compression Analysis and Extensions\n";
+        cout << "Select input type:\n";
+        cout << "1. Custom Input\n";
+        cout << "2. Uniform Distribution (e.g., 'abcdef')\n";
+        cout << "3. Realistic Paragraph\n";
+
+        int input_type;
+        cin >> input_type;
+        cin.ignore();
+
+        if (input_type == 2) input = "aaaaaa";
+        else if (input_type == 3) input = "abcdef";
+        else if (input_type == 4) input = "Huffman coding is a data compression algorithm.";
+        else if (input_type != 1) {
+            cout << "Invalid input type\n";
+            return 0;
+        }
+
+        if (input_type == 1) {
+            cout << "Enter your string: ";
+            getline(cin, input);
+        }
+
+        task_3(input);
+    }
     else cout << "Invalid task number\n";
 
     return 0;
