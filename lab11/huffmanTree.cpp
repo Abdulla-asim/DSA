@@ -176,8 +176,47 @@ unordered_map<char, string> task_1(string input) {
 
 // Encodes and then decodes the input string
 void task_2(string input) {
-    // Get the huffman codes hash map
-    unordered_map<char, string> huffman_codes = task_1(input);
+
+    // Step 2: Frequency table
+    unordered_map<char, int> frequency_table;
+    for (char c : input) {
+        frequency_table[c]++;
+    }
+
+    // Step 3: Use custom MinHeap to build Huffman Tree
+    MinHeap min_heap;
+    for (const auto& pair : frequency_table) {
+        HuffmanNode* node = new HuffmanNode(pair.first, pair.second);
+        min_heap.push({pair.second, node});
+    }
+
+    // Build Huffman Tree
+    while (min_heap.size() > 1) {
+        auto left = min_heap.top();
+        min_heap.pop();
+        auto right = min_heap.top();
+        min_heap.pop();
+
+        HuffmanNode* merged = new HuffmanNode('\0', left.first + right.first);
+        merged->left = left.second;
+        merged->right = right.second;
+
+        min_heap.push({merged->frequency, merged});
+    }
+
+    // Root of the Huffman Tree
+    HuffmanNode* root = min_heap.top().second;
+
+    // Step 4: Generate Huffman Codes
+    unordered_map<char, string> huffman_codes;
+    generate_codes(root, "", huffman_codes);
+
+    // Output the table
+    cout << "\nCharacter | Frequency | Huffman Code\n";
+    cout << "---------------------------------\n";
+    for (const auto& pair : frequency_table) {
+        cout << "    " << pair.first << "        " << pair.second << "          " << huffman_codes[pair.first] << "\n";
+    }
 
     // Encode the input string
     string encoded_string = encode_string(input, huffman_codes);
