@@ -244,9 +244,8 @@ int main() {
         cin >> input_type;
         cin.ignore();
 
-        if (input_type == 2) input = "aaaaaa";
-        else if (input_type == 3) input = "abcdef";
-        else if (input_type == 4) input = "Huffman coding is a data compression algorithm.";
+        if (input_type == 2) input = "abcdef";
+        else if (input_type == 3) input = "Huffman coding is a data compression algorithm.";
         else if (input_type != 1) {
             cout << "Invalid input type\n";
             return 0;
