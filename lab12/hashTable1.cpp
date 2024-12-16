@@ -3,63 +3,81 @@
 
 using namespace std;
 
-class HashTable {
+struct Pair
+{
+    int key;
+    int value;
+};
+
+class HashTable_DA {
 public:
-    int *table;
+    Pair *table;
     int size;
 
-    HashTable(int size) {
+    HashTable_DA(int size) 
+    {
         this->size = size;
-        table = new int[size];
+        table = new Pair[size];
     }
 
-    void insert(int key, int value) {
+    void insert(int key, int value) 
+    {
         int index = key;
-        if (key >= size || key < 0) {
+        if (key >= size || key < 0) 
+        {
             cout << "[INFO] Index out of bounds." << endl;
             return;
         }
-        table[index] = value;
+        table[index].value = value;
         cout << "[INFO] Inserted.." << endl;
     }
 
-    int get(int key) {
-        if (key >= size || key < 0) {
+    int get(int key) 
+    {
+        if (key >= size || key < 0) 
+        {
             cout << "[INFO] Index out of bounds." << endl;
             return -1;
         }
-        return table[key];
+        return table[key].value;
     }
 
-    void remove(int key) {
-        if (key >= size || key < 0) {
+    void remove(int key) 
+    {
+        if (key >= size || key < 0) 
+        {
             cout << "[INFO] Index out of bounds." << endl;
             return;
         }
-        table[key] = -1;
+        table[key].key = -1;
         cout << "[INFO] Removed.." << endl;
     }
 
-    bool search(int key, int value) {
-        if (key >= size || key < 0) {
+    bool search(int key) 
+    {
+        if (key >= size || key < 0) 
+        {
             cout << "[INFO] Index out of bounds." << endl;
             return false;
         }
-        return table[key] == value;
+        if (table[key].value == -1)
+            return false;
+        return table[key].value;
     }
 
     void print() {
         cout << "{ " << endl;
-        for (int i = 0; i < size; i++) {
-            if (table[i] != -1)
-                cout << i << ": " << table[i] << ", ";
+        for (int i = 0; i < size; i++) 
+        {
+            if (table[i].value != -1)
+                cout << i << ": " << table[i].value << ", ";
         }
         cout << endl << "}" << endl;
     }
 };
 
 int main() {
-    HashTable table(10);
+    HashTable_DA table(10);
     table.insert(0, 1);
     table.insert(1, 2);
     table.insert(2, 3);
@@ -122,7 +140,7 @@ int main() {
                 cout << "Enter value: ";
                 int value;
                 cin >> value;
-                cout << "Found: " << table.search(key, value) << endl;
+                cout << "Found: " << table.search(key) << endl;
                 break;
             }
             case 6: {

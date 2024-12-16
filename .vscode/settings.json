@@ -4,7 +4,8 @@
         "iostream": "cpp",
         "random": "cpp",
         "limits": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "chrono": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }

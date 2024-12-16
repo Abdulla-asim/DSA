@@ -3,60 +3,70 @@
 
 using namespace std;
 
-class HashTable {
+struct Pair
+{
+    int key;
+    int value;
+};
+
+class HashTable_LP {
 public:
-    int *table;
+    Pair *table;
     int size;
 
-    HashTable(int size) {
+    HashTable_LP(int size) 
+    {
         this->size = size;
-        table = new int[size];
+        table = new Pair[size];
 
         // Initialize the table with -1
         for (int i = 0; i < size; i++) {
-            table[i] = -1;
+            table[i].value = -1;
         }
     }
 
-    void insert(int key, int value) {
+    void insert(int key, int value) 
+    {
         int index = hash(key);  // Get the index ( 0 to size - 1)
-        for (; table[index] != -1; index = (++index) % size);  // Find the next empty slot
-        table[index] = value; // Insert the value 
+        for (; table[index].value != -1; index = (++index) % size);  // Find the next empty slot
+        table[index].value = value; // Insert the value 
         cout << "[INFO] Inserted.." << endl;
     }
 
-    int get(int key) {
+    int get(int key) 
+    {
         int index = hash(key);
-        return table[index];
+        return table[index].value;
     }
 
-    void remove(int key) {
+    void remove(int key) 
+    {
         int index = hash(key);
-        table[index] = -1;
+        table[index].value = -1;
         cout << "[INFO] Removed.." << endl;
     }
 
-    bool search(int key, int value) {
+    bool search(int key) 
+    {
         int index = hash(key);
         int start_index = index;
-        while (table[index] != -1) {
-            if (table[index] == value) {
+        while (table[index].value != -1) 
+        {
+            if (table[index].key == key)
                 return true;
-            }
             index = (++index) % size;
-            if (index == start_index) {
-                break;
-            }
+            if (index == start_index) // in case key is not found and the index reaches the start index circularly
+                return false;
         }
         return false;
     }
 
-    void print() {
+    void print() 
+    {
         cout << "{ " << endl;
-        for (int i = 0; i < size; i++) {
-            if (table[i] != -1)
-                cout << i << ": " << table[i] << ", ";
-        }
+        for (int i = 0; i < size; i++)
+            if (table[i].value != -1)
+                cout << i << ": " << table[i].value << ", ";
         cout << endl << "}" << endl;
     }
 
@@ -67,7 +77,7 @@ public:
 };
 
 int main () {
-    HashTable table(10);
+    HashTable_LP table(10);
 
     while (true) {
         cout << "1. Insert" << endl;
@@ -118,7 +128,7 @@ int main () {
                 cout << "Enter value: ";
                 int value;
                 cin >> value;
-                cout << "Found: " << table.search(key, value) << endl;
+                cout << "Found: " << table.search(key) << endl;
                 break;
             }
             case 6: {

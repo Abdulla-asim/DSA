@@ -2,28 +2,38 @@
 
 using namespace std;
 
-class HashTable {
+struct Pair
+{
+    int key;
+    int value;
+};
+
+// DH: Double Hashing
+class HashTable_DH {
 public:
-    int *table;
+    Pair *table;
     int size;
 
-    HashTable(int size) {
+    HashTable_DH(int size) 
+    {
         this->size = size;
-        table = new int[size];
+        table = new Pair[size];
 
         // Initialize the table with -1
-        for (int i = 0; i < size; i++) {
-            table[i] = -1;
-        }
+        for (int i = 0; i < size; i++)
+            table[i].value = -1;
     }
 
-    void insert(int key, int value) {
+    void insert(int key, int value) 
+    {
         int index = hash1(key);  // Get the primary hash index
         int step = hash2(key);  // Get the step size using the secondary hash
 
-        for (int i = 0; i < size; i++) {
-            if (table[index] == -1) { // Found an empty slot
-                table[index] = value; // Insert the value
+        for (int i = 0; i < size; i++) 
+        {
+            if (table[index].value == -1) 
+            { // Found an empty slot
+                table[index].value = value; // Insert the value
                 cout << "[INFO] Inserted key: " << key << " value: " << value << " at index: " << index << endl;
                 return;
             }
@@ -33,75 +43,82 @@ public:
         cout << "[ERROR] Hash table is full, could not insert key: " << key << endl;
     }
 
-    int get(int key) {
+    int get(int key) 
+    {
         int index = hash1(key);
         int step = hash2(key);
 
-        for (int i = 0; i < size; i++) {
-            if (table[index] == -1) {
+        for (int i = 0; i < size; i++) 
+        {
+            if (table[index].value == -1) {
                 return -1; // Key not found
             }
             index = (index + step) % size;
         }
 
-        return table[index];
+        return table[index].value;
     }
 
-    void remove(int key) {
+    void remove(int key) 
+    {
         int index = hash1(key);
         int step = hash2(key);
 
-        for (int i = 0; i < size; i++) {
-            if (table[index] == -1) {
+        for (int i = 0; i < size; i++) 
+        {
+            if (table[index].value == -1) 
+            {
                 cout << "[INFO] Key not found for deletion: " << key << endl;
                 return; // Key not found
             }
-            table[index] = -1;
+            table[index].value = -1;
             cout << "[INFO] Removed key: " << key << " from index: " << index << endl;
             return;
             index = (index + step) % size;
         }
     }
 
-    bool search(int key, int value) {
+    bool search(int key) 
+    {
         int index = hash1(key);
         int step = hash2(key);
 
-        for (int i = 0; i < size; i++) {
-            if (table[index] == -1) {
-                return false; // Key not found
-            }
-            if (table[index] == value) {
+        for (int i = 0; i < size; i++) 
+        {
+            if (table[index].value == -1)
+                return false; // not found
+            if (table[index].key == key)
                 return true;
-            }
             index = (index + step) % size;
         }
-
         return false;
     }
 
-    void print() {
+    void print() 
+    {
         cout << "{ " << endl;
-        for (int i = 0; i < size; i++) {
-            if (table[i] != -1)
-                cout << i << ": " << table[i] << ", ";
-        }
+        for (int i = 0; i < size; i++) 
+            if (table[i].value != -1)
+                cout << i << ": " << table[i].value << ", ";
+
         cout << endl << "}" << endl;
     }
 
     // Primary Hash Function
-    int hash1(int key) {
+    int hash1(int key) 
+    {
         return key % size;
     }
 
     // Secondary Hash Function
-    int hash2(int key) {
+    int hash2(int key) 
+    {
         return 1 + (key % (size - 1)); // Ensure step size is non-zero
     }
 };
 
 int main() {
-    HashTable table(10);
+    HashTable_DH table(10);
 
     while (true) {
         cout << "1. Insert" << endl;
@@ -152,7 +169,7 @@ int main() {
                 cout << "Enter value: ";
                 int value;
                 cin >> value;
-                cout << "Found: " << table.search(key, value) << endl;
+                cout << "Found: " << table.search(key) << endl;
                 break;
             }
             case 6: {
