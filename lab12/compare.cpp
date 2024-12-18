@@ -324,6 +324,7 @@ public:
     }
 };
 
+/*
 int main() {
     // Initialize the hash tables
     HashTable_DA direct_addr = HashTable_DA(10);
@@ -350,7 +351,7 @@ int main() {
     cout << endl;
 
 
-    /* Compare the time taken by Direct Addressing */
+    //Compare the time taken by Direct Addressing
     auto start = chrono::high_resolution_clock::now();
     direct_addr.search(4);
     auto end = chrono::high_resolution_clock::now();
@@ -358,7 +359,7 @@ int main() {
     chrono::duration<double, milli> duration = end - start;
     cout << "Search operation time for Direct Addressing: \t" << duration.count() << " milli seconds." << endl;
 
-    /* Compare the time taken by Linear Probing */
+    // Compare the time taken by Linear Probing 
     start = chrono::high_resolution_clock::now();
     linear_probing.search(4);
     end = chrono::high_resolution_clock::now();
@@ -366,7 +367,7 @@ int main() {
     duration = end - start;
     cout << "Search operation time for Linear Probing: \t" << duration.count() << " milli seconds." << endl;
 
-    /* Compare the time taken by Quadratic Probing */
+    // Compare the time taken by Quadratic Probing
     start = chrono::high_resolution_clock::now();
     quadratic_probing.search(4);
     end = chrono::high_resolution_clock::now();
@@ -374,11 +375,12 @@ int main() {
     duration = end - start;
     cout << "Search operation time for Quadratic Probing: \t" << duration.count() << " milli seconds." << endl;
 
-    /* Compare the time taken by Double Hashing */
+    // Compare the time taken by Double Hashing 
     start = chrono::high_resolution_clock::now();
     double_hashing.search(4);
     end = chrono::high_resolution_clock::now();
     // Calculate the time taken
     duration = end - start;
     cout << "Search operation time for Double Hashing: \t" << duration.count() << " milli seconds." << endl;
-}
+} S
+*/
